@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 public class BankResponse {
     private String responseCode;
     private String responseMessage;
-    private String accountInfo;
+    private AccountInfo accountInfo;
 }

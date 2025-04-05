@@ -17,7 +17,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public BankResponse createAccount(UserRequest userRequest) {
 
-        if (userRepository.existbyphoneNumber(userRequest.getPhoneNumber())) {
+        if (userRepository.existsByPhoneNumber(userRequest.getPhoneNumber())) {
             return  BankResponse.builder()
                     .responseCode(AccountUtils.ACCOUNT_EXIST_CODE)
                     .accountInfo(null)
@@ -25,6 +25,7 @@ public class UserServiceImpl implements UserService{
                     .build();
 
         }
+
 
 
         User newuser = User.builder()
@@ -48,9 +49,10 @@ public class UserServiceImpl implements UserService{
     return BankResponse.builder()
             .responseCode(AccountUtils.ACCOUNT_CREATED_SUCCESS_CODE)
             .responseMessage(AccountUtils.ACCOUNT_CREATED_SUCCESS_MESSAGE)
-            .accountInfo
-                    (AccountInfo.builder()
+            .accountInfo(AccountInfo.builder()
                     .accountBalance(savedUser.getAccountBalance())
+                    .accountNumber(savedUser.getAccountNumber())
+                    .accountName(savedUser.getFirstName()+" "+savedUser.getLastName())
                     .build())
 
 
