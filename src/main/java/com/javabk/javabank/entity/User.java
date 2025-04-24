@@ -7,6 +7,11 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Data
 @Entity
 @Table(name = "users")
@@ -27,11 +32,10 @@ public class User {
     private String phoneNumber;
     private String alternatePhoneNumber;
     private String status;
+    @Column(columnDefinition = "boolean default 0")
+    private boolean sentEmail;
     @CreationTimestamp
     private LocalDateTime createdAt;
     @UpdateTimestamp
     private LocalDateTime updatedAt;
-
-
-
-}
+    }
