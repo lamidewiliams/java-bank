@@ -4,6 +4,7 @@ import com.javabk.javabank.DTO.*;
 import com.javabk.javabank.entity.User;
 import com.javabk.javabank.repository.UserRepository;
 import com.javabk.javabank.util.AccountUtils;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -103,14 +104,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String nameInquiry(EnquiryRequest request) {
+    public String nameEnquiry(EnquiryRequest request) {
         boolean ifAccountExists = userRepository.existsByAccountNumber(request.getAccountNumber());
         if (!ifAccountExists){
             return AccountUtils.ACCOUNT_NOT_EXIST_CODE;
         }User foundUser = userRepository.findByAccountNumber(request.getAccountNumber());
         return foundUser.getFirstName() + " " + foundUser.getLastName() + " " + foundUser.getOtherName();
     }
-
+    @Transactional
     @Override
     public BankResponse creditAccount(CreditAndDebit request) {
         boolean ifAccountExists = userRepository.existsByAccountNumber(request.getAccountNumber());
@@ -123,6 +124,8 @@ public class UserServiceImpl implements UserService {
                 }
         User usercredit = userRepository.findByAccountNumber(request.getAccountNumber());
         usercredit.setAccountBalance(usercredit.getAccountBalance().add(request.getAmount()));
+       // userRepository.save(usercredit);
+
         return BankResponse.builder()
                 .responseMessage(AccountUtils.ACCOUNT_Credited_MESSAGE)
                 .responseCode(AccountUtils.ACCOUNT_EXIST_CODE)
@@ -132,8 +135,6 @@ public class UserServiceImpl implements UserService {
                         .accountNumber(request.getAccountNumber())
                         .build()
                 )
-
-
                 .build();
 
 
