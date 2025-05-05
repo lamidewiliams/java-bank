@@ -59,18 +59,7 @@ public class EmailServiceImp  implements EmailService{
 
 
 
-   /* private void emailNotSent(User savedUser){
-        if (!savedUser.isSentEmail()) {
-            System.out.println("Resending email to: " + savedUser.getEmail());
-            //SimpleMailMessage mailMessage = new SimpleMailMessage();
-            mailMessage.setFrom(senderEmail);
-            mailMessage.setTo(emailDetails.getRecipient()); // why not use savedUser.getEmail()
-            mailMessage.setSubject(emailDetails.getSubject());
-            mailMessage.setText(emailDetails.getMessageBody());
-            javamailSender.send(mailMessage);
-            savedUser.setSentEmail(true);
-            System.out.println("mail Sent SuccessfullyX2!!");
-*/
+
         }
 
 

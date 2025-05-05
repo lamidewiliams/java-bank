@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class EnquiryRequest {
+public class   EnquiryRequest {
     private String accountNumber;
 }

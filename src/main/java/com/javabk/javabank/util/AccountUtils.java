@@ -6,12 +6,18 @@ public class AccountUtils {
 
     public static final String ACCOUNT_EXIST_CODE="0001";
     public static final String ACCOUNT_EXIST_MESSAGE="This user already exist!!";
+
     public static final String ACCOUNT_CREATED_SUCCESS_CODE ="0002";
     public static final String ACCOUNT_CREATED_SUCCESS_MESSAGE ="Account created successfully!!";
+
     public static final String ACCOUNT_NOT_EXIST_CODE ="0003";
     public static final String ACCOUNT_NOT_EXIST_MESSAGE ="User does not exist!!";
+
     public static final String ACCOUNT_FOUND_CODE ="0004";
     public static final String ACCOUNT_FOUNND_MESSAGE ="USER FOUND";
+
+    public static final String ACCOUNT_Credited_code ="0005";
+    public static final String ACCOUNT_Credited_MESSAGE ="Account credited successfully!!";
 
 
 

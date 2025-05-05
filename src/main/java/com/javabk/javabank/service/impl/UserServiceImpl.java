@@ -30,6 +30,7 @@ public class UserServiceImpl implements UserService {
         }
 
 
+
         User newuser = User.builder()
 
                 .firstName(userRequest.getFirstName())
@@ -112,8 +113,29 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public BankResponse creditAccount(CreditAndDebit request) {
+        boolean ifAccountExists = userRepository.existsByAccountNumber(request.getAccountNumber());
+        if (!ifAccountExists){
+            return BankResponse.builder()
+                    .responseCode(AccountUtils.ACCOUNT_NOT_EXIST_CODE)
+                    .responseMessage(AccountUtils.ACCOUNT_NOT_EXIST_MESSAGE)
+                    .accountInfo(null)
+                    .build();
+                }
+        User usercredit = userRepository.findByAccountNumber(request.getAccountNumber());
+        usercredit.setAccountBalance(usercredit.getAccountBalance().add(request.getAmount()));
+        return BankResponse.builder()
+                .responseMessage(AccountUtils.ACCOUNT_Credited_MESSAGE)
+                .responseCode(AccountUtils.ACCOUNT_EXIST_CODE)
+                .accountInfo(AccountInfo.builder()
+                        .accountName(usercredit.getFirstName()+ " "+usercredit.getLastName()+" "+usercredit.getOtherName())
+                        .accountBalance(usercredit.getAccountBalance())
+                        .accountNumber(request.getAccountNumber())
+                        .build()
+                )
 
-    }
+
+                .build();
 
 
+}
 }

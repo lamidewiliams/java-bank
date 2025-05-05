@@ -26,4 +26,8 @@ public class UserController {
         return userService.nameInquiry(request);
     }
 
+    @PostMapping("/tocreditaccount")
+    public String tocreditAccount(@RequestBody UserRequest userRequest){}
+
+
 }
