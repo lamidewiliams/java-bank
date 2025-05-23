@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.net.CacheRequest;
 
 @Service
@@ -63,7 +64,6 @@ public class UserServiceImpl implements UserService {
                         .accountNumber(savedUser.getAccountNumber())
                         .accountName(savedUser.getFirstName() + " " + savedUser.getLastName())
                         .build())
-
                 .build();
     }
 
@@ -111,6 +111,9 @@ public class UserServiceImpl implements UserService {
         }User foundUser = userRepository.findByAccountNumber(request.getAccountNumber());
         return foundUser.getFirstName() + " " + foundUser.getLastName() + " " + foundUser.getOtherName();
     }
+
+
+
     @Transactional
     @Override
     public BankResponse creditAccount(CreditAndDebit request) {
@@ -136,7 +139,40 @@ public class UserServiceImpl implements UserService {
                         .build()
                 )
                 .build();
+    }
+    @Transactional
+    @Override
+    public BankResponse debitAccount(CreditAndDebit request) {
+        boolean ifAccountExists = userRepository.existsByAccountNumber(request.getAccountNumber());
+        if (!ifAccountExists){
+            return BankResponse.builder()
+                    .responseCode(AccountUtils.ACCOUNT_NOT_EXIST_CODE)
+                    .responseMessage(AccountUtils.ACCOUNT_NOT_EXIST_MESSAGE)
+                    .accountInfo(null)
+                    .build();
+        }
+        User userdebit = userRepository.findByAccountNumber(request.getAccountNumber());
+        BigInteger availablBalance = userdebit.getAccountBalance().toBigInteger();
+        BigInteger amountTodebit = request.getAmount().toBigInteger();
+        if (availablBalance.compareTo(amountTodebit)<0){
+            return BankResponse.builder()
+                    .responseCode(AccountUtils.BALANCE_LOW_CODE)
+                    .responseMessage(AccountUtils.BALANCE_LOW_MESSAGE)
+                    .accountInfo(null)
+                    .build();
+        }
+        else{
+            userdebit.setAccountBalance(userdebit.getAccountBalance().subtract(request.getAmount()));
+            return BankResponse.builder()
+                    .responseCode(AccountUtils.Debit_code)
+                    .responseMessage(AccountUtils.DEBIT_MESSAGE)
+                    .accountInfo(AccountInfo.builder()
+                            .accountNumber(request.getAccountNumber())
+                            .accountName(userdebit.getFirstName()+" "+userdebit.getLastName())
+                            .accountBalance(userdebit.getAccountBalance())
+                            .build())
+                    .build();
+        }
 
-
-}
+    }
 }

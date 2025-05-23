@@ -19,6 +19,14 @@ public class AccountUtils {
     public static final String ACCOUNT_Credited_code ="0005";
     public static final String ACCOUNT_Credited_MESSAGE ="Account credited successfully!!";
 
+    public static final String BALANCE_LOW_CODE ="0005";
+    public static final String BALANCE_LOW_MESSAGE ="Insufficient balance!!";
+
+    public static final String Debit_code ="0006";
+    public static final String DEBIT_MESSAGE ="Your account has been debited";
+
+
+
 
 
     public  static String generateAccountNumber() {
