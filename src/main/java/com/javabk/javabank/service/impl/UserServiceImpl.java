@@ -131,7 +131,7 @@ public class UserServiceImpl implements UserService {
 
         return BankResponse.builder()
                 .responseMessage(AccountUtils.ACCOUNT_Credited_MESSAGE)
-                .responseCode(AccountUtils.ACCOUNT_EXIST_CODE)
+                .responseCode(AccountUtils.ACCOUNT_Credited_code)
                 .accountInfo(AccountInfo.builder()
                         .accountName(usercredit.getFirstName()+ " "+usercredit.getLastName()+" "+usercredit.getOtherName())
                         .accountBalance(usercredit.getAccountBalance())
@@ -175,4 +175,25 @@ public class UserServiceImpl implements UserService {
         }
 
     }
+    public  BankResponse transfer(TransferRequest request){
+        boolean ifSendersAccountExists = userRepository.existsByAccountNumber(request.getSendersAccount());
+        boolean ifReceiversAccountExists = userRepository.existsByAccountNumber(request.getReceiversAccount());
+        if (!ifSendersAccountExists){
+            return BankResponse.builder()
+                    .responseCode(AccountUtils.SENDERS_ACCOUNT_NOT_EXIST_CODE)
+                    .responseMessage(AccountUtils.SENDERS_ACCOUNT_NOT_EXIST_MESSAGE)
+                    .accountInfo(null)
+                    .build();
+        }
+        if (!ifReceiversAccountExists){
+            return BankResponse.builder()
+                    .responseCode(AccountUtils.Receiver_ACCOUNT_NOT_EXIST_CODE)
+                    .responseMessage(AccountUtils.Receiver_ACCOUNT_NOT_EXIST_MESSAGE)
+                    .accountInfo(null)
+                    .build();
+        }
+
+    }
+
+
 }

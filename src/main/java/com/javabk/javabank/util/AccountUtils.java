@@ -25,6 +25,12 @@ public class AccountUtils {
     public static final String Debit_code ="0006";
     public static final String DEBIT_MESSAGE ="Your account has been debited";
 
+    // for transfers
+    public static final String SENDERS_ACCOUNT_NOT_EXIST_CODE ="0007";
+    public static final String SENDERS_ACCOUNT_NOT_EXIST_MESSAGE ="Senders account does not exist!!";
+
+    public static final String Receiver_ACCOUNT_NOT_EXIST_CODE ="0007";
+    public static final String Receiver_ACCOUNT_NOT_EXIST_MESSAGE ="Destination account does not exist or temporarily unavailable !!";
 
 
 

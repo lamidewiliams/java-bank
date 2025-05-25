@@ -1,10 +1,6 @@
 package com.javabk.javabank.service.impl;
 
-import com.javabk.javabank.DTO.BankResponse;
-import com.javabk.javabank.DTO.CreditAndDebit;
-import com.javabk.javabank.DTO.EnquiryRequest;
-import com.javabk.javabank.DTO.UserRequest;
-
+import com.javabk.javabank.DTO.*;
 
 
 public interface UserService {
@@ -14,4 +10,5 @@ public interface UserService {
     BankResponse creditAccount(CreditAndDebit request);
     String nameEnquiry(EnquiryRequest request);
     BankResponse debitAccount(CreditAndDebit request);
+    BankResponse transfer(TransferRequest request);
 }
