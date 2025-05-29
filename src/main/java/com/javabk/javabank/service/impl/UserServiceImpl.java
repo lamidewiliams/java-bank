@@ -1,5 +1,4 @@
 package com.javabk.javabank.service.impl;
-
 import com.javabk.javabank.DTO.*;
 import com.javabk.javabank.entity.User;
 import com.javabk.javabank.repository.UserRepository;
@@ -10,8 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.net.CacheRequest;
-
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
@@ -140,6 +137,8 @@ public class UserServiceImpl implements UserService {
                 )
                 .build();
     }
+
+
     @Transactional
     @Override
     public BankResponse debitAccount(CreditAndDebit request) {
@@ -175,25 +174,118 @@ public class UserServiceImpl implements UserService {
         }
 
     }
+
+
+    @Transactional
     public  BankResponse transfer(TransferRequest request){
-        boolean ifSendersAccountExists = userRepository.existsByAccountNumber(request.getSendersAccount());
-        boolean ifReceiversAccountExists = userRepository.existsByAccountNumber(request.getReceiversAccount());
-        if (!ifSendersAccountExists){
-            return BankResponse.builder()
-                    .responseCode(AccountUtils.SENDERS_ACCOUNT_NOT_EXIST_CODE)
-                    .responseMessage(AccountUtils.SENDERS_ACCOUNT_NOT_EXIST_MESSAGE)
-                    .accountInfo(null)
-                    .build();
-        }
-        if (!ifReceiversAccountExists){
-            return BankResponse.builder()
+              boolean ifReceiversAccountExists = userRepository.existsByAccountNumber(request.getReceiversAccount());
+              // Check if destination account exist, i feel this is where a form of enquiry will exist like a name enquiry
+              if (!ifReceiversAccountExists){
+                  return BankResponse.builder()
                     .responseCode(AccountUtils.Receiver_ACCOUNT_NOT_EXIST_CODE)
                     .responseMessage(AccountUtils.Receiver_ACCOUNT_NOT_EXIST_MESSAGE)
                     .accountInfo(null)
                     .build();
+              }
+              // check if the money you want to send is not above the balance in the senders account
+              User SourceAccount = userRepository.findByAccountNumber(request.getSendersAccount());
+        if (SourceAccount == null) {
+            return BankResponse.builder()
+                    .responseCode(AccountUtils.Senders_ACCOUNT_NOT_EXIST_CODE)
+                    .responseMessage("Sender account does not exist")
+                    .accountInfo(null)
+                    .build();
         }
 
+        User RecieverAccount = userRepository.findByAccountNumber(request.getReceiversAccount());
+              BigDecimal theAmount = request.getAmount();
+              BigDecimal theSendersBalance = SourceAccount.getAccountBalance();
+              if (theAmount.compareTo(theSendersBalance)>0){
+                  return BankResponse.builder()
+                          .responseCode(AccountUtils.BALANCE_LOW_CODE)
+                          .responseMessage(AccountUtils.BALANCE_LOW_MESSAGE)
+                          .build();
+              }
+              else{
+                SourceAccount.setAccountBalance(SourceAccount.getAccountBalance().subtract(theAmount));
+              }
+                 RecieverAccount.setAccountBalance(RecieverAccount.getAccountBalance().add(theAmount));
+        userRepository.save(SourceAccount);
+        userRepository.save(RecieverAccount);
+
+
+        return  BankResponse.builder()
+                .responseCode(AccountUtils.TRANSFER_SUCCESSFULL_CODE)
+                .responseMessage(AccountUtils.TRANSFER_SUCCESSFUL_MESSAGE)
+                .accountInfo(null)
+                .build();
     }
 
 
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+              User SourceAccount = userRepository.findByAccountNumber(request.getSendersAccount());
+            BigDecimal thebalance = SourceAccount.getAccountBalance(); // must be BigDecimal
+            if (request.getAmount().compareTo(thebalance) > 0) {
+            return BankResponse.builder()
+                    .responseCode(AccountUtils.BALANCE_LOW_CODE)
+                    .responseMessage(AccountUtils.BALANCE_LOW_MESSAGE)
+                    .accountInfo(null)
+                    .build();
+        }else {
+
+            SourceAccount.setAccountBalance(SourceAccount.getAccountBalance().subtract(request.getAmount());
+
+                  userRepository.save(SourceAccount);
+
+
+              }
+              EmailDetails debitMail= EmailDetails.builder()
+                      .recipient(SourceAccount.getEmail())
+                      .messageBody(request.getAmount().toString() +" Debited !!, current balance is " + SourceAccount.getAccountBalance() )
+                      .subject("DEBIT ALERT")
+                      .build();
+
+              emailService.sendEmailAlert(debitMail);
+
+              User destinationAccount= userRepository.findByAccountNumber(request.getReceiversAccount());
+              destinationAccount.setAccountBalance(destinationAccount.getAccountBalance().add(request.getAmount()));
+
+        EmailDetails creditMail= EmailDetails.builder()
+                .recipient(destinationAccount.getEmail())
+                .messageBody(request.getAmount().toString() +" Credited from "+ SourceAccount.getLastName()+" "+ SourceAccount.getFirstName()+" , current balance is " + destinationAccount.getAccountBalance())
+                .subject("CREDIT ALERT")
+                .build();
+        userRepository.save(destinationAccount);
+
+        emailService.sendEmailAlert(debitMail);
+
+        return  BankResponse.builder()
+                .responseCode(AccountUtils.TRANSFER_SUCCESSFULL_CODE)
+                .responseMessage(AccountUtils.TRANSFER_SUCCESSFUL_MESSAGE)
+                .accountInfo(null)
+                .build();
+
+
+ */
+    }
+
+
+
+

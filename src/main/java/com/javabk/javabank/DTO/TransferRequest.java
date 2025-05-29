@@ -5,10 +5,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @Builder@AllArgsConstructor@NoArgsConstructor
 public class TransferRequest {
     private String SendersAccount; // account that will be debited
     private String ReceiversAccount; // This account will be credited
-    private String Amount; // The amount that will be sent
+    private BigDecimal Amount;
 }
