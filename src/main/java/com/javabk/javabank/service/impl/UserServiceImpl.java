@@ -195,7 +195,7 @@ public class UserServiceImpl implements UserService {
                     .responseMessage("Sender account does not exist")
                     .accountInfo(null)
                     .build();
-        }Ann
+        }
 
         User RecieverAccount = userRepository.findByAccountNumber(request.getReceiversAccount());
               BigDecimal theAmount = request.getAmount();
